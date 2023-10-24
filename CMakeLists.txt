@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(urdf REQUIRED)
+find_package(gazebo_ros REQUIRED)
 find_package(xacro REQUIRED)
 
 if(BUILD_TESTING)
@@ -20,6 +21,7 @@ install(
     urdf
     rviz
     launch
+	worlds 
   DESTINATION
     share/${PROJECT_NAME}/
 )
