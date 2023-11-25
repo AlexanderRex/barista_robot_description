@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot name="barista_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
 <!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
 
 <!-- Include macro -->
@@ -9,11 +10,13 @@
 
 <!-- Define the argument for including the laser -->
 <xacro:arg name="include_laser" default="true" />
+<xacro:arg name="robot_name" default="barista" />
+<xacro:property name="robot_name_prop" value="$(arg robot_name)"/>
 
 <!-- Lidar Sensor Macro Definition -->
 <xacro:macro name="laser_scanner">
     <!-- Lidar Sensor -->
-    <link name="lidar">
+    <link name="${robot_name_prop}_lidar">
         <visual>
             <origin rpy="0 0 0" xyz="0.0 0 -0.05" />
             <geometry>
@@ -21,16 +24,14 @@
             </geometry>
         </visual>
     </link>
-    <joint name="lidar_joint" type="fixed">
+    <joint name="${robot_name_prop}_lidar_joint" type="fixed">
         <origin rpy="0 0 0" xyz="-0.05 0 0.125" />
-        <parent link="base_link" />
-        <child link="lidar" />
+        <parent link="${robot_name_prop}_base_link" />
+        <child link="${robot_name_prop}_lidar" />
     </joint>
-    <gazebo reference="lidar">
-        <material>Gazebo/Black</material>
-    </gazebo>
     <!-- Lidar plugin -->
     <gazebo reference="lidar">
+        <material>Gazebo/Black</material>
         <sensor name="sensor_ray" type="ray">
             <pose>0 0 0 0 0 0</pose>
             <ray>
@@ -50,9 +51,9 @@
             <always_on>true</always_on>
             <visualize>true</visualize>
             <update_rate>100.0</update_rate>
-            <plugin name="laser" filename="libgazebo_ros_ray_sensor.so">
+            <plugin name="${robot_name_prop}_laser" filename="libgazebo_ros_ray_sensor.so">
                 <ros>
-                    <remapping>~/out:=scan</remapping>
+                    <remapping>~/out:=/${robot_name_prop}/scan</remapping>
                 </ros>
                 <output_type>sensor_msgs/LaserScan</output_type>
             </plugin>
@@ -81,12 +82,12 @@
     <color rgba="0.088656 0.428691 0.491021 1" />
   </material>
 
-  <link name="base_link">
+  <link name="${robot_name_prop}_base_link">
   </link>
 
   <!-- Body -->
 
-  <link name="chassis">
+  <link name="${robot_name_prop}_chassis">
     <visual>
       <geometry>
         <cylinder length="0.155" radius="0.178" />
@@ -105,70 +106,70 @@
     </inertial>
   </link>
 
-  <joint name="base_link_joint" type="fixed">
+  <joint name="${robot_name_prop}_base_link_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="base_link" />
-    <child link="chassis" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_chassis" />
   </joint>
 
-  <gazebo reference="chassis">
+  <gazebo reference="${robot_name_prop}_chassis">
         <material>Gazebo/Blue</material>
   </gazebo>
 
   <!-- Front standoffs -->
-  <xacro:standoff name="front_right_standoff" />
+  <xacro:standoff name="${robot_name_prop}_front_right_standoff" />
 
-  <joint name="front_right_standoff_joint" type="fixed">
+  <joint name="${robot_name_prop}_front_right_standoff_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.025 -0.15 0.1875" />
-    <parent link="base_link" />
-    <child link="front_right_standoff" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_front_right_standoff" />
   </joint>
 
-  <xacro:standoff name="front_left_standoff" />
+  <xacro:standoff name="${robot_name_prop}_front_left_standoff" />
 
-  <joint name="front_left_standoff_joint" type="fixed">
+  <joint name="${robot_name_prop}_front_left_standoff_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.025 0.15 0.1875" />
-    <parent link="base_link" />
-    <child link="front_left_standoff" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_front_left_standoff" />
   </joint>
 
   <!-- Back standoffs -->
 
-  <xacro:standoff name="back_right_standoff" />
+  <xacro:standoff name="${robot_name_prop}_back_right_standoff" />
 
-  <joint name="back_right_standoff_joint" type="fixed">
+  <joint name="${robot_name_prop}_back_right_standoff_joint" type="fixed">
     <origin rpy="0 0 0" xyz="-0.025 -0.15 0.1875" />
-    <parent link="base_link" />
-    <child link="back_right_standoff" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_back_right_standoff" />
   </joint>
 
-  <xacro:standoff name="back_left_standoff" />
+  <xacro:standoff name="${robot_name_prop}_back_left_standoff" />
 
-  <joint name="back_left_standoff_joint" type="fixed">
+  <joint name="${robot_name_prop}_back_left_standoff_joint" type="fixed">
     <origin rpy="0 0 0" xyz="-0.025 0.15 0.1875" />
-    <parent link="base_link" />
-    <child link="back_left_standoff" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_back_left_standoff" />
   </joint>
 
   <!-- Cup holder tray -->
 
-  <xacro:cup_holder_tray name="cup_holder" />
+  <xacro:cup_holder_tray name="${robot_name_prop}_cup_holder" />
 
-  <joint name="cup_holder_joint" type="fixed">
+  <joint name="${robot_name_prop}_cup_holder_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.0 0.0 0.3425" />
-    <parent link="base_link" />
-    <child link="cup_holder" />
+    <parent link="${robot_name_prop}_base_link" />
+    <child link="${robot_name_prop}_cup_holder" />
   </joint>
 
-  <gazebo reference="cup_holder">
+  <gazebo reference="${robot_name_prop}_cup_holder">
         <material>Gazebo/Blue</material>
   </gazebo>
 
   <!-- Wheel Left -->
 
-  <xacro:wheel prefix="left" />
+  <xacro:wheel prefix="${robot_name_prop}_left" />
 
-  <gazebo reference="left_wheel">
+  <gazebo reference="${robot_name_prop}_left_wheel">
     <kp>1000000000000000000000000000.0</kp>
     <kd>1000000000000000000000000000.0</kd>
     <mu1>10.0</mu1>
@@ -176,10 +177,10 @@
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <joint name="joint_left_wheel" type="continuous">
+  <joint name="${robot_name_prop}_joint_left_wheel" type="continuous">
     <origin rpy="0 0 0" xyz="0 0.12 -0.0775" />
-    <child link="left_wheel" />
-    <parent link="chassis" />
+    <child link="${robot_name_prop}_left_wheel" />
+    <parent link="${robot_name_prop}_chassis" />
     <axis rpy="0 0 0" xyz="0 1 0" />
     <limit effort="10000" velocity="1000" />
     <joint_properties damping="1.0" friction="1.0" />
@@ -187,9 +188,9 @@
 
   <!-- Wheel Right -->
 
-  <xacro:wheel prefix="right" />
+  <xacro:wheel prefix="${robot_name_prop}_right" />
 
-  <gazebo reference="right_wheel">
+  <gazebo reference="${robot_name_prop}_right_wheel">
     <kp>1000000000000000000000000000.0</kp>
     <kd>1000000000000000000000000000.0</kd>
     <mu1>10.0</mu1>
@@ -197,10 +198,10 @@
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <joint name="joint_right_wheel" type="continuous">
+  <joint name="${robot_name_prop}_joint_right_wheel" type="continuous">
     <origin rpy="0 0 0" xyz="0 -0.12 -0.0775" />
-    <child link="right_wheel" />
-    <parent link="chassis" />
+    <child link="${robot_name_prop}_right_wheel" />
+    <parent link="${robot_name_prop}_chassis" />
     <axis rpy="0 0 0" xyz="0 1 0" />
     <limit effort="10000" velocity="1000" />
     <joint_properties damping="1.0" friction="1.0" />
@@ -208,7 +209,7 @@
 
   <!-- Caster Wheel Front -->
 
-  <link name="front_yaw_link">
+  <link name="${robot_name_prop}_front_yaw_link">
     <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -231,20 +232,20 @@
     </inertial>
   </link>
 
-  <gazebo reference="front_yaw_link">
+  <gazebo reference="${robot_name_prop}_front_yaw_link">
         <material>Gazebo/Blue</material>
   </gazebo>
 
-  <joint name="front_yaw_joint" type="continuous">
+  <joint name="${robot_name_prop}_front_yaw_joint" type="continuous">
     <origin rpy="0 0 0" xyz="0.12 0 -0.1082" />
-    <parent link="chassis" />
-    <child link="front_yaw_link" />
+    <parent link="${robot_name_prop}_chassis" />
+    <child link="${robot_name_prop}_front_yaw_link" />
     <axis xyz="0 0 1" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
   </joint>
   
-  <link name="front_roll_link">
+  <link name="${robot_name_prop}_front_roll_link">
      <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -267,20 +268,20 @@
     </inertial>
   </link>
 
-  <gazebo reference="front_roll_link">
+  <gazebo reference="${robot_name_prop}_front_roll_link">
         <material>Gazebo/Red</material>
   </gazebo>
 
-  <joint name="front_roll_joint" type="continuous">
+  <joint name="${robot_name_prop}_front_roll_joint" type="continuous">
     <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="front_yaw_link" />
-    <child link="front_roll_link" />
+    <parent link="${robot_name_prop}_front_yaw_link" />
+    <child link="${robot_name_prop}_front_roll_link" />
     <axis xyz="1 0 0" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
   </joint>
 
-  <link name="front_pitch_link">
+  <link name="${robot_name_prop}_front_pitch_link">
      <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -303,7 +304,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="front_pitch_link">
+  <gazebo reference="${robot_name_prop}_front_pitch_link">
     <kp>1000000000000000000000000000.0</kp>
     <kd>1000000000000000000000000000.0</kd>
     <mu1>0.5</mu1>
@@ -311,10 +312,10 @@
     <material>Gazebo/Purple</material>
   </gazebo>
 
-  <joint name="front_pitch_joint" type="continuous">
+  <joint name="${robot_name_prop}_front_pitch_joint" type="continuous">
     <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="front_roll_link" />
-    <child link="front_pitch_link" />
+    <parent link="${robot_name_prop}_front_roll_link" />
+    <child link="${robot_name_prop}_front_pitch_link" />
     <axis xyz="0 1 0" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
@@ -322,7 +323,7 @@
 
   <!-- Caster Wheel Back -->
 
-  <link name="back_yaw_link">
+  <link name="${robot_name_prop}_back_yaw_link">
      <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -345,20 +346,20 @@
     </inertial>
   </link>
 
-  <gazebo reference="back_yaw_link">
+  <gazebo reference="${robot_name_prop}_back_yaw_link">
         <material>Gazebo/Blue</material>
   </gazebo>
 
-  <joint name="back_yaw_joint" type="continuous">
+  <joint name="${robot_name_prop}_back_yaw_joint" type="continuous">
     <origin rpy="0 0 0" xyz="-0.12 0 -0.1082" />
-    <parent link="chassis" />
-    <child link="back_yaw_link" />
+    <parent link="${robot_name_prop}_chassis" />
+    <child link="${robot_name_prop}_back_yaw_link" />
     <axis xyz="0 0 1" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
   </joint>
 
-  <link name="back_roll_link">
+  <link name="${robot_name_prop}_back_roll_link">
      <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -381,20 +382,20 @@
     </inertial>
   </link>
 
-  <gazebo reference="back_roll_link">
+  <gazebo reference="${robot_name_prop}_back_roll_link">
         <material>Gazebo/Red</material>
   </gazebo>
 
-  <joint name="back_roll_joint" type="continuous">
+  <joint name="${robot_name_prop}_back_roll_joint" type="continuous">
     <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="back_yaw_link" />
-    <child link="back_roll_link" />
+    <parent link="${robot_name_prop}_back_yaw_link" />
+    <child link="${robot_name_prop}_back_roll_link" />
     <axis xyz="1 0 0" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
   </joint>
 
-  <link name="back_pitch_link">
+  <link name="${robot_name_prop}_back_pitch_link">
      <visual>
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0" />
       <geometry>
@@ -417,7 +418,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="back_pitch_link">
+  <gazebo reference="${robot_name_prop}_back_pitch_link">
     <kp>1000000000000000000000000000.0</kp>
     <kd>1000000000000000000000000000.0</kd>
     <mu1>0.5</mu1>
@@ -425,10 +426,10 @@
     <material>Gazebo/Yellow</material>
   </gazebo>
 
-  <joint name="back_pitch_joint" type="continuous">
+  <joint name="${robot_name_prop}_back_pitch_joint" type="continuous">
     <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="back_roll_link" />
-    <child link="back_pitch_link" />
+    <parent link="${robot_name_prop}_back_roll_link" />
+    <child link="${robot_name_prop}_back_pitch_link" />
     <axis xyz="0 1 0" />
     <limit effort="1000.0" velocity="100.0" />
     <dynamics damping="0.0" friction="0.1" />
@@ -438,31 +439,31 @@
 
   <!-- JOINT PUBLISHER -->
   <gazebo>
-    <plugin name="barista_robot_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+    <plugin name="${robot_name_prop}_robot_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
       <ros>
-          <remapping>~/out:=joint_states</remapping>
+          <remapping>~/out:=/${robot_name_prop}/joint_states</remapping>
       </ros>
       <update_rate>30</update_rate>
 
-      <joint_name>joint_left_wheel</joint_name>
-      <joint_name>joint_right_wheel</joint_name>
-      <joint_name>front_yaw_joint</joint_name>
-      <joint_name>back_yaw_joint</joint_name>
-      <joint_name>front_roll_joint</joint_name>
-      <joint_name>back_roll_joint</joint_name>
-      <joint_name>front_pitch_joint</joint_name>
-      <joint_name>back_pitch_joint</joint_name>
+      <joint_name>${robot_name_prop}_joint_left_wheel</joint_name>
+      <joint_name>${robot_name_prop}_joint_right_wheel</joint_name>
+      <joint_name>${robot_name_prop}_front_yaw_joint</joint_name>
+      <joint_name>${robot_name_prop}_back_yaw_joint</joint_name>
+      <joint_name>${robot_name_prop}_front_roll_joint</joint_name>
+      <joint_name>${robot_name_prop}_back_roll_joint</joint_name>
+      <joint_name>${robot_name_prop}_front_pitch_joint</joint_name>
+      <joint_name>${robot_name_prop}_back_pitch_joint</joint_name>
       
     </plugin>
   </gazebo>
 
   <!-- Differential drive -->
   <gazebo>
-    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+    <plugin filename="libgazebo_ros_diff_drive.so" name="{robot_name_prop}_differential_drive_controller">
 
       <!-- wheels -->
-      <left_joint>joint_left_wheel</left_joint>
-      <right_joint>joint_right_wheel</right_joint>
+      <left_joint>${robot_name_prop}_joint_left_wheel</left_joint>
+      <right_joint>${robot_name_prop}_joint_right_wheel</right_joint>
 
       <!-- kinematics -->
       <wheel_separation>0.24</wheel_separation>
@@ -476,8 +477,8 @@
       <publish_odom>true</publish_odom>
       <publish_odom_tf>true</publish_odom_tf>
 
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_link</robot_base_frame>
+      <odometry_frame>/${robot_name_prop}/odom</odometry_frame>
+      <robot_base_frame>${robot_name_prop}_base_link</robot_base_frame>
 
     </plugin>
   </gazebo>
