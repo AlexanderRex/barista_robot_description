@@ -11,7 +11,19 @@
 <!-- Define the argument for including the laser -->
 <xacro:arg name="include_laser" default="true" />
 <xacro:arg name="robot_name" default="barista" />
+
 <xacro:property name="robot_name_prop" value="$(arg robot_name)"/>
+<xacro:property name="chassis_material" value="Gazebo/Blue"/>
+
+<!-- Check if the robot is Rick and set color to Blue -->
+<xacro:if value="${robot_name_prop == 'rick'}">
+  <xacro:property name="chassis_material" value="Gazebo/Blue"/>
+</xacro:if>
+
+<!-- Check if the robot is Morty and set color to Red -->
+<xacro:if value="${robot_name_prop == 'morty'}">
+  <xacro:property name="chassis_material" value="Gazebo/Red"/>
+</xacro:if>
 
 <!-- Lidar Sensor Macro Definition -->
 <xacro:macro name="laser_scanner">
@@ -113,7 +125,7 @@
   </joint>
 
   <gazebo reference="${robot_name_prop}_chassis">
-        <material>Gazebo/Blue</material>
+      <material>${chassis_material}</material>
   </gazebo>
 
   <!-- Front standoffs -->
@@ -162,7 +174,7 @@
   </joint>
 
   <gazebo reference="${robot_name_prop}_cup_holder">
-        <material>Gazebo/Blue</material>
+       <material>${chassis_material}</material>
   </gazebo>
 
   <!-- Wheel Left -->
