@@ -40,20 +40,20 @@ def generate_launch_description():
         output="screen"
     )
 
-    # # Настройка Joint State Publisher для каждого робота
-    # rick_joint_state_publisher_node = Node(
-    #     package='joint_state_publisher',
-    #     executable='joint_state_publisher',
-    #     namespace='rick',
-    #     output="screen"
-    # )
+    # Настройка Joint State Publisher для каждого робота
+    rick_joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        namespace='rick',
+        output="screen"
+    )
 
-    # morty_joint_state_publisher_node = Node(
-    #     package='joint_state_publisher',
-    #     executable='joint_state_publisher',
-    #     namespace='morty',
-    #     output="screen"
-    # )
+    morty_joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        namespace='morty',
+        output="screen"
+    )
 
     # Настройка RViz
     rviz_node = Node(
@@ -82,8 +82,10 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('world', default_value=[os.path.join(pkg_barista_gazebo, 'worlds', 'barista_robot_empty.world'), ''], description='SDF world file'),
         rick_robot_state_publisher_node,
+        rick_joint_state_publisher_node,
         rick_spawn_robot,
         morty_robot_state_publisher_node,
+        morty_joint_state_publisher_node, 
         morty_spawn_robot,
         rviz_node,
         gazebo

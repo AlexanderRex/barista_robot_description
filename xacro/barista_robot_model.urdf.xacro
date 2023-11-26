@@ -30,7 +30,7 @@
         <child link="${robot_name_prop}_lidar" />
     </joint>
     <!-- Lidar plugin -->
-    <gazebo reference="lidar">
+    <gazebo reference="${robot_name_prop}_lidar">
         <material>Gazebo/Black</material>
         <sensor name="sensor_ray" type="ray">
             <pose>0 0 0 0 0 0</pose>
@@ -457,9 +457,15 @@
     </plugin>
   </gazebo>
 
-  <!-- Differential drive -->
+   <!-- Differential drive -->
   <gazebo>
-    <plugin filename="libgazebo_ros_diff_drive.so" name="{robot_name_prop}_differential_drive_controller">
+    <plugin filename="libgazebo_ros_diff_drive.so" name="${robot_name_prop}_differential_drive_controller">
+
+        <ros>
+          <!-- Remap default topics -->
+          <remapping>cmd_vel:=${robot_name_prop}/cmd_vel</remapping>
+          <remapping>odom:=${robot_name_prop}/odom</remapping>
+        </ros>
 
       <!-- wheels -->
       <left_joint>${robot_name_prop}_joint_left_wheel</left_joint>
@@ -477,7 +483,7 @@
       <publish_odom>true</publish_odom>
       <publish_odom_tf>true</publish_odom_tf>
 
-      <odometry_frame>/${robot_name_prop}/odom</odometry_frame>
+      <odometry_frame>${robot_name_prop}_odom</odometry_frame>
       <robot_base_frame>${robot_name_prop}_base_link</robot_base_frame>
 
     </plugin>
