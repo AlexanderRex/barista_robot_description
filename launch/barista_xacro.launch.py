@@ -61,14 +61,8 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher_node',
         emulate_tty=True,
-        parameters=[{'use_sim_time': True, 'robot_description': Command(['xacro ', robot_desc_path])}],
+        parameters=[{'use_sim_time': True, 'robot_description': Command(['xacro ', robot_desc_path, ' robot_name:=barista'])}],
         output="screen"
-    )
-
-    joint_state_publisher_node = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher'
     )
 
     # RVIZ Configuration
@@ -117,7 +111,6 @@ def generate_launch_description():
           'world',
           default_value=[os.path.join(pkg_barista_gazebo, 'worlds', 'barista_robot_empty.world'), ''],
           description='SDF world file'),         
-            joint_state_publisher_node,
             robot_state_publisher_node,
             rviz_node,
             spawn_robot,
