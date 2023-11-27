@@ -10,7 +10,7 @@
         <geometry>
           <cylinder length="${tray_length}" radius="${tray_radius}" />
         </geometry>
-        <material name="rviz_material" />
+        <material name="${robot_material}" />
       </visual>
       <collision>
         <geometry>

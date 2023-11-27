@@ -13,21 +13,27 @@
 <xacro:arg name="robot_name" default="barista" />
 
 <xacro:property name="robot_name" value="$(arg robot_name)"/>
+<xacro:property name="robot_material" value="BlueMaterial"/>
+
+<material name="BlueMaterial">
+    <color rgba="0 0 1 1"/> 
+</material>
+<material name="RedMaterial">
+    <color rgba="1 0 0 1"/>
+</material>
 
 <xacro:property name="chassis_material" value="Gazebo/Blue"/>
-
-<xacro:property name="rviz_chassis_material_blue" value="blue"/>
-<xacro:property name="rviz_chassis_material_red" value="red"/>
 
 <!-- Check if the robot is Rick and set color to Blue -->
 <xacro:if value="${robot_name == 'rick'}">
   <xacro:property name="chassis_material" value="Gazebo/Blue"/>
-  <xacro:property name="rviz_material" value="${rviz_chassis_material_blue}"/>
+  <xacro:property name="robot_material" value="BlueMaterial"/>
 </xacro:if>
 
 <!-- Check if the robot is Morty and set color to Red -->
 <xacro:if value="${robot_name == 'morty'}">
   <xacro:property name="chassis_material" value="Gazebo/Red"/>
+  <xacro:property name="robot_material" value="RedMaterial"/>
 </xacro:if>
 
 <!-- Lidar Sensor Macro Definition -->
@@ -108,7 +114,7 @@
       <geometry>
         <cylinder length="0.155" radius="0.178" />
       </geometry>
-      <material name="rviz_material" />
+      <material name="${robot_material}" />
     </visual>
     <collision>
       <geometry>
