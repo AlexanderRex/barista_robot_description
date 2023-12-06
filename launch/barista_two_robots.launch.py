@@ -6,11 +6,14 @@ from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_prefix
 
 def generate_launch_description():
     # Path to files folder
-    package_description = "barista_robot_description"
     urdf_file = 'barista_robot_model.urdf.xacro'
+
+    package_description = "barista_robot_description"
+
     robot_desc_path = os.path.join(get_package_share_directory(package_description), "xacro", urdf_file)
 
     # Parsing to each robot name
@@ -20,13 +23,35 @@ def generate_launch_description():
     # Gazebo and Rviz config
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
     pkg_barista_gazebo = get_package_share_directory('barista_robot_description')
+
+    install_dir = get_package_prefix(package_description)
+
+    # Set the path to the WORLD model files. Is to find the models inside the models folder in barista_robot_description package
+    gazebo_models_path = os.path.join(pkg_barista_gazebo, 'meshes')
+    # os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
+
+    if 'GAZEBO_MODEL_PATH' in os.environ:
+        os.environ['GAZEBO_MODEL_PATH'] =  os.environ['GAZEBO_MODEL_PATH'] + ':' + install_dir + '/share' + ':' + gazebo_models_path
+    else:
+        os.environ['GAZEBO_MODEL_PATH'] =  install_dir + "/share" + ':' + gazebo_models_path
+
+    if 'GAZEBO_PLUGIN_PATH' in os.environ:
+        os.environ['GAZEBO_PLUGIN_PATH'] = os.environ['GAZEBO_PLUGIN_PATH'] + ':' + install_dir + '/lib'
+    else:
+        os.environ['GAZEBO_PLUGIN_PATH'] = install_dir + '/lib'
+
     gazebo = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')))
+
     rviz_config_dir = os.path.join(get_package_share_directory(package_description), 'rviz', 'barista_robot.rviz')
+
+    print("GAZEBO MODELS PATH=="+str(os.environ["GAZEBO_MODEL_PATH"]))
+    print("GAZEBO PLUGINS PATH=="+str(os.environ["GAZEBO_PLUGIN_PATH"]))
 
     rick_robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         namespace='rick',
+        emulate_tty=True,
         parameters=[{'use_sim_time': True, 'robot_description': rick_robot_desc_command, 'frame_prefix': "rick/"}],
         output="screen"
     )
@@ -35,6 +60,7 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         namespace='morty',
+        emulate_tty=True,
         parameters=[{'use_sim_time': True, 'robot_description': morty_robot_desc_command, 'frame_prefix': "morty/"}],
         output="screen"
     )
